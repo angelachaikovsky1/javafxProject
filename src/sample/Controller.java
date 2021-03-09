@@ -5,6 +5,10 @@ import javafx.scene.control.*;
 
 import javafx.event.ActionEvent;
 import javafx.scene.layout.HBox;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+
+import java.io.File;
 
 public class Controller {
 
@@ -240,12 +244,24 @@ public class Controller {
 
     @FXML
     void exportToFile(ActionEvent event) {
-
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Open Target File for the Export");
+        chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"),
+                new FileChooser.ExtensionFilter("All Files", "*.*"));
+        Stage stage = new Stage();
+        File targeFile = chooser.showSaveDialog(stage); //get the reference of the target file
+        //write code to write to the file.
     }
 
     @FXML
     void importFromFile(ActionEvent event) {
-
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle("Open Source File for the Import");
+        chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"),
+                new FileChooser.ExtensionFilter("All Files", "*.*"));
+        Stage stage = new Stage();
+        File sourceFile = chooser.showOpenDialog(stage); //get the reference of the source file
+        //write code to read from the file.
     }
 
     @FXML

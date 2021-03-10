@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import java.io.File;
 
 public class Controller {
+    private Company company = new Company();
 
     @FXML
     private Button addButton;
@@ -127,7 +128,7 @@ public class Controller {
     private Button exportButton;
 
     @FXML
-    private TextArea phpdpaTextArea;
+    private TextArea generalTextArea;
 
 
     private void enableAdd(){
@@ -224,7 +225,96 @@ public class Controller {
 
     @FXML
     void addSubmit(ActionEvent event) {
+        generalTextArea.clear();
 
+        RadioButton selectedRadioButton = (RadioButton) employeeGroup.getSelectedToggle();
+        String employeeType = selectedRadioButton.getText();
+
+        selectedRadioButton = (RadioButton) departmentAdd.getSelectedToggle();
+        String departAdd = selectedRadioButton.getText();
+        String date = dateAddText.getText();
+        String name = nameAddText.getText();
+
+        double hourly = 0.0;
+        double annual = 0.0;
+        int code = 0;
+
+        if(employeeType.equals("Part time")){
+            hourly = Double.parseDouble(hourlyAddText.getText());
+        }else if(employeeType.equals("Full time")){
+            annual = Double.parseDouble(annualAddText.getText());
+        }else if(employeeType.equals("Management")){
+            annual = Double.parseDouble(annualAddText.getText());
+            code = Integer.parseInt(codeAddText.getText());
+        }else{
+            //fuck ?
+        }
+        /*
+         DO ERROR CHECK IF BAD THEN OUTPUT TO CONSOLE
+         */
+
+        if(employeeType.equals("Part time")){
+            Profile newEmployeeProfile = profileData(name, departAdd, date);
+            Employee newEmployee = new Parttime(newEmployeeProfile, hourly);
+            boolean wasParttimeAdded = company.add(newEmployee);
+            if(wasParttimeAdded){
+                generalTextArea.appendText("Employee added.");
+            }else{
+                generalTextArea.appendText("Employee is already in the list.");
+            }
+        }else if(employeeType.equals("Full time")){
+            Profile newEmployeeProfile = profileData(name, departAdd, date);
+            Employee newEmployee = new Fulltime(newEmployeeProfile, annual);
+            boolean wasFulltimeAdded = company.add(newEmployee);
+            if(wasFulltimeAdded){
+                generalTextArea.appendText("Employee added.");
+            }else{
+                generalTextArea.appendText("Employee is already in the list.");
+            }
+        }else{
+            Profile newEmployeeProfile = profileData(name, departAdd, date);
+            Employee newEmployee = new Management(newEmployeeProfile, annual, code);
+            boolean wasManagementAdded = company.add(newEmployee);
+            if(wasManagementAdded){
+                generalTextArea.appendText("Employee added.");
+            }else{
+                generalTextArea.appendText("Employee is already in the list.");
+            }
+        }
+    }
+
+    /**
+     * Creates a profile object given the necessary input
+     * @param name name of a person
+     * @param department the department of a person
+     * @param dateHired the date the person was hired
+     * @return the object created
+     */
+    private Profile profileData(String name, String department, String dateHired){
+        Date dateHiredObject = new Date(dateHired);
+        Profile newEmployeeProfile = new Profile(name, department, dateHiredObject);
+        return newEmployeeProfile;
+    }
+
+    @FXML
+    void disableAnnualCode(ActionEvent event) {
+        annualAddText.setDisable(true);
+        codeAddText.setDisable(true);
+        hourlyAddText.setDisable(false);
+    }
+
+    @FXML
+    void disableHourly(ActionEvent event) {
+        annualAddText.setDisable(false);
+        codeAddText.setDisable(false);
+        hourlyAddText.setDisable(true);
+    }
+
+    @FXML
+    void disableHourlyCode(ActionEvent event) {
+        annualAddText.setDisable(false);
+        codeAddText.setDisable(true);
+        hourlyAddText.setDisable(true);
     }
 
     @FXML

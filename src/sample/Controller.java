@@ -319,17 +319,25 @@ public class Controller {
 
     @FXML
     void displayPA(ActionEvent event) {
-        company.print();
+        generalTextArea.clear();
+        String employeeListPA = company.print();
+        generalTextArea.appendText(employeeListPA);
+
     }
 
     @FXML
     void displayPD(ActionEvent event) {
-        company.printByDepartment();
+        generalTextArea.clear();
+        String employeeListPD = company.printByDepartment();
+        generalTextArea.appendText(employeeListPD);
     }
 
     @FXML
     void displayPH(ActionEvent event) {
-        company.printByDate();
+        generalTextArea.clear();
+        String employeeListPH = company.printByDate();
+        generalTextArea.appendText(employeeListPH);
+
     }
 
     @FXML

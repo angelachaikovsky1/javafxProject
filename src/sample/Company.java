@@ -135,57 +135,70 @@ public class Company {
 
     /**
      * Prints the string representation of the employees in the database
+     * @param printString the String that holds the string representations of all the employees
+     * @return a string containing the string representations of the all the employees in the database
      */
-    private void printEmployees(){
+    private String printEmployees(String printString){
         for(Employee employee : emplist){
             if(employee != null){
-                System.out.println(employee.toString());
+                printString += employee.toString() + "\n";
             }
         }
+        return printString;
     }
 
     /**
-     * Prints a list of the employees in the database. If the database is empty, a print statement acknowledging that
-     * is printed.
+     * Returns a list of the employees in the database. If the database is empty, returns a statement acknowledging that.
+     * @return a String containing a list of all the employees in the database or a statement acknowledging that it is
+     * empty
      */
-    public void print() {
+    public String print() {
+        String printString = "";
        if(numEmployee == 0){
-            System.out.println("Employee database is empty.");
-            return;
+            printString = "Employee database is empty.";
+            return printString;
         }
-
-       System.out.println("--Printing earning statements for all employees--");
-       printEmployees();
+       printString = "--Printing earning statements for all employees--\n";
+       printString = printEmployees(printString);
+       return printString;
     }
 
     /**
-     * Prints a list of the employees in the database sorted by department. If the database is empty, a print statement
-     * acknowledging that is printed
+     * Returns a list of the employees in the database sorted by department. If the database is empty, returns a statement
+     * acknowledging that.
+     * @return a String containing a list of all the employees in the database sorted by department or a statement
+     * acknowledging that it is empty
      */
-    public void printByDepartment() {
+    public String printByDepartment() {
+        String printStringDep = "";
         if(numEmployee == 0){
-            System.out.println("Employee database is empty.");
-            return;
+            printStringDep = "Employee database is empty.";
+            return printStringDep;
         }
 
-        System.out.println("\n--Printing earning statements by department--");
+        printStringDep = "--Printing earning statements by department--\n";
         sortDepartment();
-        printEmployees();
+        printStringDep = printEmployees(printStringDep);
+        return printStringDep;
     }
 
     /**
-     * Prints a list of the employees in the database sorted by the date. If the database is empty, a print statement
-     * acknowledging that printed
+     * Returns a list of the employees in the database sorted by the date. If the database is empty, a returns statement
+     * acknowledging that.
+     * @return a String containing a list of all the employees in the database sorted by date or a statement
+     * acknowledging that it is empty
      */
-    public void printByDate() {
+    public String printByDate() {
+        String printStringDate = "";
         if(numEmployee == 0){
-            System.out.println("Employee database is empty.");
-            return;
+            printStringDate = "Employee database is empty.";
+            return printStringDate;
         }
 
-        System.out.println("\n--Printing earning statements by date hired--");
+        printStringDate = "--Printing earning statements by date hired--\n";
         sortDate();
-        printEmployees();
+        printStringDate = printEmployees(printStringDate);
+        return printStringDate;
     }
 
     /**

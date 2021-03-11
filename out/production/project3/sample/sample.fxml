@@ -355,7 +355,7 @@
                <children>
                   <Pane prefHeight="121.0" prefWidth="200.0" style="-fx-border-width: 10; -fx-border-color: #f2dec4; -fx-background-color: #f5ece1;">
                      <children>
-                        <Button fx:id="computeButton" layoutX="43.0" layoutY="42.0" mnemonicParsing="false" text="Compute Payment" />
+                        <Button fx:id="computeButton" layoutX="43.0" layoutY="42.0" mnemonicParsing="false" onAction="#computePayment" text="Compute Payment" />
                      </children>
                   </Pane>
                   <VBox prefHeight="121.0" prefWidth="204.0" style="-fx-border-color: #f2dec4; -fx-border-width: 10; -fx-background-color: #f5ece1;">

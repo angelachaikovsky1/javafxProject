@@ -319,17 +319,17 @@ public class Controller {
 
     @FXML
     void displayPA(ActionEvent event) {
-
+        company.print();
     }
 
     @FXML
     void displayPD(ActionEvent event) {
-
+        company.printByDepartment();
     }
 
     @FXML
     void displayPH(ActionEvent event) {
-
+        company.printByDate();
     }
 
     @FXML
@@ -367,8 +367,35 @@ public class Controller {
 
     @FXML
     void removeSubmit(ActionEvent event) {
+        generalTextArea.clear();
 
+        RadioButton selectedRadioButton = (RadioButton) departmentRemove.getSelectedToggle();
+        String departRemove = selectedRadioButton.getText();
+        String date = dateRemoveText.getText();
+        String name = nameRemoveText.getText();
+        int tempPay = 0;
+        Profile newEmployeeProfile = profileData(name, departRemove, date);
+        Employee employeeToBeRemoved = new Fulltime(newEmployeeProfile, tempPay);
+        boolean wasEmployeeRemoved = company.remove(employeeToBeRemoved);
+        if (wasEmployeeRemoved) {
+            generalTextArea.appendText("Employee removed.");
+        }else if (company.getNumEmployee() == 0){
+            generalTextArea.appendText("Employee database is empty.");
+        }else{
+            generalTextArea.appendText("Employee does not exist.");
+        }
     }
+
+    @FXML
+    void computePayment(ActionEvent event) {
+        if(company.getNumEmployee()==0){
+            generalTextArea.appendText("Employee database is empty.");
+        }else {
+            company.processPayments();
+            generalTextArea.appendText("Calculation of employee payments is done.");
+        }
+    }
+
 
     @FXML
     void setFreeze(ActionEvent event) {
@@ -383,6 +410,28 @@ public class Controller {
 
     @FXML
     void setSubmit(ActionEvent event) {
+        generalTextArea.clear();
+
+
+        RadioButton selectedRadioButton = (RadioButton) departmentSet.getSelectedToggle();
+        String departSet = selectedRadioButton.getText();
+        String date = dateSetText.getText();
+        String name = nameSetText.getText();
+        int hours = Integer.parseInt(hoursSetText.getText());
+        int tempPay = 0;
+        Profile newEmployeeProfile = profileData(name, departSet, date);
+        Employee employeeHoursSet = new Parttime(newEmployeeProfile, tempPay);
+        Parttime tempEmployee = (Parttime)employeeHoursSet;
+        tempEmployee.setHours(hours);
+        boolean wasEmployeeHoursSet = company.setHours(employeeHoursSet);
+        if(wasEmployeeHoursSet){
+            generalTextArea.appendText("Working hours set.");
+        }else if (company.getNumEmployee() == 0){
+            generalTextArea.appendText("Employee database is empty.");
+        }else{
+            generalTextArea.appendText("Employee does not exist.");
+        }
+
 
     }
 

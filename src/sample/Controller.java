@@ -289,6 +289,18 @@ public class Controller {
                 }
             }
         }
+        partTime.setSelected(false);
+        fullTime.setSelected(false);
+        management.setSelected(false);
+        addIT.setSelected(false);
+        addCS.setSelected(false);
+        addECE.setSelected(false);
+        dateAddText.clear();
+        nameAddText.clear();
+        hourlyAddText.clear();
+        annualAddText.clear();
+        codeAddText.clear();
+
     }
     /**
      * The isValidRole method verifies that the management code is a valid number

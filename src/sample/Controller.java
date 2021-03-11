@@ -13,6 +13,10 @@ import java.io.File;
 public class Controller {
     private Company company = new Company();
 
+    final static int MANAGER = 1;
+    final static int DHEAD = 2;
+    final static int DIRECTOR = 3;
+    final static int MAXHOURS = 100;
     @FXML
     private Button addButton;
 
@@ -249,38 +253,109 @@ public class Controller {
         }else{
             //fuck ?
         }
-        /*
-         DO ERROR CHECK IF BAD THEN OUTPUT TO CONSOLE
-         */
+        
 
         if(employeeType.equals("Part time")){
-            Profile newEmployeeProfile = profileData(name, departAdd, date);
-            Employee newEmployee = new Parttime(newEmployeeProfile, hourly);
-            boolean wasParttimeAdded = company.add(newEmployee);
-            if(wasParttimeAdded){
-                generalTextArea.appendText("Employee added.");
-            }else{
-                generalTextArea.appendText("Employee is already in the list.");
+            if(isValidPay(hourly, "AP") && isValidDate(date)){
+                Profile newEmployeeProfile = profileData(name, departAdd, date);
+                Employee newEmployee = new Parttime(newEmployeeProfile, hourly);
+                boolean wasParttimeAdded = company.add(newEmployee);
+                if(wasParttimeAdded){
+                    generalTextArea.appendText("Employee added.");
+                }else{
+                    generalTextArea.appendText("Employee is already in the list.");
+                }
             }
         }else if(employeeType.equals("Full time")){
-            Profile newEmployeeProfile = profileData(name, departAdd, date);
-            Employee newEmployee = new Fulltime(newEmployeeProfile, annual);
-            boolean wasFulltimeAdded = company.add(newEmployee);
-            if(wasFulltimeAdded){
-                generalTextArea.appendText("Employee added.");
-            }else{
-                generalTextArea.appendText("Employee is already in the list.");
+            if(isValidPay(annual, "AF") && isValidDate(date)) {
+                Profile newEmployeeProfile = profileData(name, departAdd, date);
+                Employee newEmployee = new Fulltime(newEmployeeProfile, annual);
+                boolean wasFulltimeAdded = company.add(newEmployee);
+                if (wasFulltimeAdded) {
+                    generalTextArea.appendText("Employee added.");
+                } else {
+                    generalTextArea.appendText("Employee is already in the list.");
+                }
             }
-        }else{
-            Profile newEmployeeProfile = profileData(name, departAdd, date);
-            Employee newEmployee = new Management(newEmployeeProfile, annual, code);
-            boolean wasManagementAdded = company.add(newEmployee);
-            if(wasManagementAdded){
-                generalTextArea.appendText("Employee added.");
-            }else{
-                generalTextArea.appendText("Employee is already in the list.");
+        }else {
+            if (isValidPay(annual, "AF") && isValidDate(date) && isValidRole(code)){
+                Profile newEmployeeProfile = profileData(name, departAdd, date);
+                Employee newEmployee = new Management(newEmployeeProfile, annual, code);
+                boolean wasManagementAdded = company.add(newEmployee);
+                if (wasManagementAdded) {
+                    generalTextArea.appendText("Employee added.");
+                } else {
+                    generalTextArea.appendText("Employee is already in the list.");
+                }
             }
         }
+    }
+    /**
+     * The isValidRole method verifies that the management code is a valid number
+     * @param number a management code (1-3 inclusive)
+     * @return true if the code is one of the three
+     */
+    private boolean isValidRole(int number){
+        boolean isValid = false;
+        if(number == MANAGER || number == DHEAD || number == DIRECTOR){
+            isValid = true;
+        }else{
+            generalTextArea.appendText("Invalid management code.");
+        }
+        return isValid;
+    }
+
+    /**
+     * The isValidcode method takes in a department code and verifies that the code
+     * is one of 3 possible strings
+     * @param pay either the hourly wage or yearly salary
+     * @param keyCommand determines if the person is full time or not
+     * @return true if the command is one of the possible codes
+     */
+    private boolean isValidPay(double pay, String keyCommand){
+        boolean isValid = false;
+        if(pay >= 0){
+            isValid = true;
+        }else if(keyCommand.equals("AP")){
+            generalTextArea.appendText("Pay rate cannot be negative.");
+        }else{
+            generalTextArea.appendText("Salary cannot be negative.");
+        }
+        return isValid;
+    }
+
+    /**
+     * The isValidDate method makes sure the date is valid by creating a date object
+     * to test the input string against.
+     * @param date the input date by the user
+     * @return true if the date is valid
+     */
+    private boolean isValidDate(String date){
+        Date inputDate = new Date(date);
+        boolean isValid = false;
+        if(inputDate.isValid()){
+            isValid = true;
+        }else{
+            generalTextArea.appendText(date + " is not a valid date!");
+        }
+        return isValid;
+    }
+
+    /**
+     * The isValidHours makes sure that the hours inputted cannot be negative or over 100
+     * @param hours the number of hours inputted by the user
+     * @return true if the hours are not above 100 and are not negative
+     */
+    private boolean isValidHours(int hours){
+        boolean isValid = false;
+        if(hours < 0){
+            generalTextArea.appendText("Working hours cannot be negative.");
+        }else if(hours > MAXHOURS){
+            generalTextArea.appendText("Invalid hours: over 100.");
+        }else{
+            isValid = true;
+        }
+        return isValid;
     }
 
     /**

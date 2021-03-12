@@ -2,14 +2,12 @@ package sample;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-
-import javafx.event.ActionEvent;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
-import java.io.*;
-import java.lang.reflect.InvocationTargetException;
-import java.text.NumberFormat;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.util.Scanner;
 
 public class Controller {
@@ -18,13 +16,10 @@ public class Controller {
     final static int ADDMANAGECOMMANDS = 6;
     final static int ADDPARTFULLCOMMANDS = 5;
     final static int OTHEREXPECTEDCOMMANDS = 4;
-    final static int SINGLECOMMAND = 1;
     final static int MANAGER = 1;
     final static int DHEAD = 2;
     final static int DIRECTOR = 3;
     final static int MAXHOURS = 100;
-    @FXML
-    private Button addButton;
 
     @FXML
     private Button addSubmit;
@@ -81,9 +76,6 @@ public class Controller {
     //private TextField codeAddText;
 
     @FXML
-    private Button removeButton;
-
-    @FXML
     private Button removeSubmit;
 
     @FXML
@@ -104,8 +96,6 @@ public class Controller {
     @FXML
     private TextField nameRemoveText;
 
-    @FXML
-    private Button setButton;
 
     @FXML
     private Button setSubmit;
@@ -130,24 +120,6 @@ public class Controller {
 
     @FXML
     private TextField hoursSetText;
-
-    @FXML
-    private Button computeButton;
-
-    @FXML
-    private Button phButton;
-
-    @FXML
-    private Button pdButton;
-
-    @FXML
-    private Button paButton;
-
-    @FXML
-    private Button importButton;
-
-    @FXML
-    private Button exportButton;
 
     @FXML
     private TextArea generalTextArea;
@@ -244,20 +216,14 @@ public class Controller {
         hoursSetText.setDisable(false);
     }
     @FXML
-    void addFreeze(ActionEvent event) {
+    void addFreeze() {
         generalTextArea.clear();
         clearEverything();
-        try {
-            enableAdd();
-        }
-        //Show the error message with a pop-up window.
-        catch (NumberFormatException e) {
-            //SOMETIN
-        }
+        enableAdd();
     }
 
     @FXML
-    void addSubmit(ActionEvent event) {
+    void addSubmit() {
         generalTextArea.clear();
         RadioButton selectedRadioButton;
         String employeeType;
@@ -473,7 +439,7 @@ public class Controller {
     }
 
     @FXML
-    void disableAnnualCode(ActionEvent event) {
+    void disableAnnualCode() {
         annualAddText.setDisable(true);
         managerRadio.setDisable(true);
         dHeadRadio.setDisable(true);
@@ -482,7 +448,7 @@ public class Controller {
     }
 
     @FXML
-    void disableHourly(ActionEvent event) {
+    void disableHourly() {
         annualAddText.setDisable(false);
         managerRadio.setDisable(false);
         dHeadRadio.setDisable(false);
@@ -491,7 +457,7 @@ public class Controller {
     }
 
     @FXML
-    void disableHourlyCode(ActionEvent event) {
+    void disableHourlyCode() {
         annualAddText.setDisable(false);
         managerRadio.setDisable(true);
         dHeadRadio.setDisable(true);
@@ -500,7 +466,7 @@ public class Controller {
     }
 
     @FXML
-    void displayPA(ActionEvent event) {
+    void displayPA() {
         generalTextArea.clear();
         clearEverything();
         String employeeListPA = company.print();
@@ -509,7 +475,7 @@ public class Controller {
     }
 
     @FXML
-    void displayPD(ActionEvent event) {
+    void displayPD() {
         generalTextArea.clear();
         clearEverything();
         String employeeListPD = company.printByDepartment();
@@ -517,7 +483,7 @@ public class Controller {
     }
 
     @FXML
-    void displayPH(ActionEvent event) {
+    void displayPH() {
         generalTextArea.clear();
         clearEverything();
         String employeeListPH = company.printByDate();
@@ -526,7 +492,7 @@ public class Controller {
     }
 
     @FXML
-    void exportToFile(ActionEvent event) {
+    void exportToFile() {
         generalTextArea.clear();
         clearEverything();
 
@@ -538,7 +504,14 @@ public class Controller {
             File targetFile = chooser.showSaveDialog(stage); //get the reference of the target file
 
             Writer wr = new FileWriter(targetFile);
-            wr.write(company.exportDataBase());
+            String exportDatabaseResult = company.exportDataBase();
+            if(exportDatabaseResult.equals("Employee database is empty.")){
+                generalTextArea.appendText("Employee database is empty. Export did not occur.");
+                wr.flush();
+                wr.close();
+                return;
+            }
+            wr.write(exportDatabaseResult);
             wr.flush();
             wr.close();
         }catch (IOException | NullPointerException e) {
@@ -548,7 +521,7 @@ public class Controller {
     }
 
     @FXML
-    void importFromFile(ActionEvent event) {
+    void importFromFile() {
         generalTextArea.clear();
         clearEverything();
 
@@ -574,20 +547,14 @@ public class Controller {
     }
 
     @FXML
-    void removeFreeze(ActionEvent event) {
+    void removeFreeze() {
         generalTextArea.clear();
         clearEverything();
-        try {
-            enableRemove();
-        }
-        //Show the error message with a pop-up window.
-        catch (NumberFormatException e) {
-            //SOMETIN
-        }
+        enableRemove();
     }
 
     @FXML
-    void removeSubmit(ActionEvent event) {
+    void removeSubmit() {
         generalTextArea.clear();
 
         RadioButton selectedRadioButton;
@@ -624,7 +591,7 @@ public class Controller {
     }
 
     @FXML
-    void computePayment(ActionEvent event) {
+    void computePayment() {
         generalTextArea.clear();
         clearEverything();
         if(company.getNumEmployee()==0){
@@ -637,16 +604,11 @@ public class Controller {
 
 
     @FXML
-    void setFreeze(ActionEvent event) {
+    void setFreeze() {
         generalTextArea.clear();
         clearEverything();
-        try {
-            enableSet();
-        }
-        //Show the error message with a pop-up window.
-        catch (NumberFormatException e) {
-            //SOMETIN
-        }
+        enableSet();
+
     }
 
     private void clearEverything(){
@@ -681,7 +643,7 @@ public class Controller {
     }
 
     @FXML
-    void setSubmit(ActionEvent event) {
+    void setSubmit() {
         generalTextArea.clear();
 
         RadioButton selectedRadioButton;

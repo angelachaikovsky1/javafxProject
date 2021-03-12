@@ -21,7 +21,6 @@ public class Employee {
      */
     public Employee(Profile profile){
         this.profile = profile;
-        //this.pay = payFormat(pay);
         this.payDue = payFormat(STARTPAY);
 
     }

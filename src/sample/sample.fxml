@@ -9,11 +9,12 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="644.0" prefWidth="601.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="753.0" prefWidth="601.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
    <children>
-      <VBox layoutX="18.0" layoutY="10.0" prefHeight="624.0" prefWidth="565.0">
+      <VBox layoutX="18.0" layoutY="108.0" prefHeight="624.0" prefWidth="565.0">
          <children>
             <HBox prefHeight="98.0" prefWidth="565.0" style="-fx-background-color: #f2dec4;">
                <children>
@@ -411,5 +412,14 @@
             </VBox>
          </children>
       </VBox>
+      <Pane layoutX="38.0" layoutY="14.0" prefHeight="83.0" prefWidth="525.0" style="-fx-background-color: #f2dec4;">
+         <children>
+            <Text layoutX="17.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Please select your desired action first and, if necessary, fill out the information and press submit." textAlignment="CENTER" wrappingWidth="490.13671875">
+               <font>
+                  <Font name="Times New Roman" size="20.0" />
+               </font>
+            </Text>
+         </children>
+      </Pane>
    </children>
 </Pane>

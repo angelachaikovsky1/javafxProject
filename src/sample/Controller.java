@@ -259,12 +259,26 @@ public class Controller {
     @FXML
     void addSubmit(ActionEvent event) {
         generalTextArea.clear();
+        RadioButton selectedRadioButton;
+        String employeeType;
+        String departAdd;
 
-        RadioButton selectedRadioButton = (RadioButton) employeeGroup.getSelectedToggle();
-        String employeeType = selectedRadioButton.getText();
+        try{
+            selectedRadioButton = (RadioButton) employeeGroup.getSelectedToggle();
+            employeeType = selectedRadioButton.getText();
+        }catch(NullPointerException e){
+            generalTextArea.appendText("Please select an employee type.");
+            return;
+        }
+        try{
+            selectedRadioButton = (RadioButton) departmentAdd.getSelectedToggle();
+            departAdd = selectedRadioButton.getText();
+        }catch(NullPointerException e){
+            generalTextArea.appendText("Please select a department.");
+            return;
+        }
 
-        selectedRadioButton = (RadioButton) departmentAdd.getSelectedToggle();
-        String departAdd = selectedRadioButton.getText();
+
         String date = dateAddText.getText();
         String name = nameAddText.getText();
         if(name.length() == 0){
@@ -304,8 +318,16 @@ public class Controller {
                 annualAddText.clear();
                 return;
             }
-            selectedRadioButton = (RadioButton) codeGroup.getSelectedToggle();
-            String codeString = selectedRadioButton.getText();
+
+            String codeString;
+            try{
+                selectedRadioButton = (RadioButton) codeGroup.getSelectedToggle();
+                codeString = selectedRadioButton.getText();
+            }catch(NullPointerException e){
+                generalTextArea.appendText("Please select a management code");
+                return;
+            }
+
             if(codeString.equals("Manager(1)")){
                 code = 1;
             }else if(codeString.equals("Dep. Head(2)")){
@@ -507,19 +529,19 @@ public class Controller {
     void exportToFile(ActionEvent event) {
         generalTextArea.clear();
         clearEverything();
-        FileChooser chooser = new FileChooser();
-        chooser.setTitle("Open Target File for the Export");
-        chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"),
-                new FileChooser.ExtensionFilter("All Files", "*.*"));
-        Stage stage = new Stage();
-        File targetFile = chooser.showSaveDialog(stage); //get the reference of the target file
 
         try{
+            FileChooser chooser = new FileChooser();
+            chooser.setTitle("Open Target File for the Export");
+            chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+            Stage stage = new Stage();
+            File targetFile = chooser.showSaveDialog(stage); //get the reference of the target file
+
             Writer wr = new FileWriter(targetFile);
             wr.write(company.exportDataBase());
             wr.flush();
             wr.close();
-        }catch (IOException e) {
+        }catch (IOException | NullPointerException e) {
             generalTextArea.appendText("There was an error with accessing your export file. Please try with a valid file. \n");
             return;
         }
@@ -529,14 +551,13 @@ public class Controller {
     void importFromFile(ActionEvent event) {
         generalTextArea.clear();
         clearEverything();
-        FileChooser chooser = new FileChooser();
-        chooser.setTitle("Open Source File for the Import");
-        chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"),
-                new FileChooser.ExtensionFilter("All Files", "*.*"));
-        Stage stage = new Stage();
-        File sourceFile = chooser.showOpenDialog(stage); //get the reference of the source file
-        //write code to read from the file.
+
         try {
+            FileChooser chooser = new FileChooser();
+            chooser.setTitle("Open Source File for the Import");
+            chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"));
+            Stage stage = new Stage();
+            File sourceFile = chooser.showOpenDialog(stage); //get the reference of the source file
             Scanner input = new Scanner(sourceFile);
 
             while (input.hasNextLine()) {
@@ -545,7 +566,7 @@ public class Controller {
             }
             input.close();
 
-        } catch (IOException ex) {
+        } catch (IOException | NullPointerException ex) {
             generalTextArea.appendText("There was an error with accessing your imported file. Please try with a valid file. \n");
             return;
         }
@@ -568,8 +589,17 @@ public class Controller {
     @FXML
     void removeSubmit(ActionEvent event) {
         generalTextArea.clear();
-        RadioButton selectedRadioButton = (RadioButton) departmentRemove.getSelectedToggle();
-        String departRemove = selectedRadioButton.getText();
+
+        RadioButton selectedRadioButton;
+        String departRemove;
+        try{
+            selectedRadioButton = (RadioButton) departmentRemove.getSelectedToggle();
+            departRemove = selectedRadioButton.getText();
+        }catch(NullPointerException e){
+            generalTextArea.appendText("Please select a department.");
+            return;
+        }
+
         String date = dateRemoveText.getText();
         if(!isParse(date)){
             return;
@@ -654,8 +684,16 @@ public class Controller {
     void setSubmit(ActionEvent event) {
         generalTextArea.clear();
 
-        RadioButton selectedRadioButton = (RadioButton) departmentSet.getSelectedToggle();
-        String departSet = selectedRadioButton.getText();
+        RadioButton selectedRadioButton;
+        String departSet;
+        try{
+            selectedRadioButton = (RadioButton) departmentSet.getSelectedToggle();
+            departSet = selectedRadioButton.getText();
+        }catch(NullPointerException e){
+            generalTextArea.appendText("Please select a department.");
+            return;
+        }
+
         String date = dateSetText.getText();
         if(!isParse(date)){
             return;

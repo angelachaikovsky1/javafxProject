@@ -10,6 +10,12 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Scanner;
 
+/**
+ * Handles all the user input from the interface and acts as the backend for the interface the user is interacting with.
+ * The class performs input validation to make sure the commands are properly formatted and complete. After
+ * preprocessing, the Controller class funnels the input into corresponding blocks of logic.
+ * @author Angela Chaikovsky, Hemanthvarma Bhupatiraju
+ */
 public class Controller {
     private Company company = new Company();
 
@@ -124,7 +130,9 @@ public class Controller {
     @FXML
     private TextArea generalTextArea;
 
-
+    /**
+     * Enables all fields necessary for adding an employee and disables all the other fields.
+     */
     private void enableAdd(){
         addSubmit.setDisable(false);
         removeSubmit.setDisable(true);
@@ -155,6 +163,10 @@ public class Controller {
         //codeAddText.setDisable(false);
         hoursSetText.setDisable(true);
     }
+
+    /**
+     * Enables all fields necessary for removing an employee and disables all other fields.
+     */
     private void enableRemove(){
         addSubmit.setDisable(true);
         removeSubmit.setDisable(false);
@@ -185,6 +197,10 @@ public class Controller {
         //codeAddText.setDisable(true);
         hoursSetText.setDisable(true);
     }
+
+    /**
+     * Enables all fields necessary for removing an employee and disables all other fields.
+     */
     private void enableSet(){
         addSubmit.setDisable(true);
         removeSubmit.setDisable(true);
@@ -215,6 +231,10 @@ public class Controller {
         //codeAddText.setDisable(true);
         hoursSetText.setDisable(false);
     }
+
+    /**
+     * Clears the text area and all the fields and enables the fields necessary for adding while disabling all others.
+     */
     @FXML
     void addFreeze() {
         generalTextArea.clear();
@@ -222,6 +242,11 @@ public class Controller {
         enableAdd();
     }
 
+    /**
+     * Clears the text area and attempts to add a new employee using the data inputted from the interface. Outputs
+     * a descriptive error message if there is anything wrong with the input. Otherwise, a message indicating that
+     * adding the employee to the database was successful is show in the text area.
+     */
     @FXML
     void addSubmit() {
         generalTextArea.clear();
@@ -391,6 +416,13 @@ public class Controller {
         return isValid;
     }
 
+    /**
+     * Checks if the Date class can parse through the input for the Date field. Any exceptions that may be caused by that
+     * are handled here and an appropriate message is outputted if an exception thrown. Otherwise, if the date can be
+     * parsed, true is returned.
+     * @param date the string representation of the date input
+     * @return true if the Date class can parsed the date input and false otherwise
+     */
     private boolean isParse(String date){
         boolean isParseble = false;
         try{
@@ -438,6 +470,9 @@ public class Controller {
         return newEmployeeProfile;
     }
 
+    /**
+     * Disables the Management Code options and also the Annual Salary field.
+     */
     @FXML
     void disableAnnualCode() {
         annualAddText.setDisable(true);

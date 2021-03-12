@@ -447,6 +447,10 @@ public class Controller {
         hourlyAddText.setDisable(false);
     }
 
+    /**
+     * the disableHourly() function is responsible for disabling the appropriate fields upon
+     * a "management" employee being selected.
+     */
     @FXML
     void disableHourly() {
         annualAddText.setDisable(false);
@@ -456,6 +460,10 @@ public class Controller {
         hourlyAddText.setDisable(true);
     }
 
+    /**
+     * the disableHourlyCode() function is responsible for disabling the appropriate fields
+     * upon a "full time" employee being selected
+     */
     @FXML
     void disableHourlyCode() {
         annualAddText.setDisable(false);
@@ -465,6 +473,9 @@ public class Controller {
         hourlyAddText.setDisable(true);
     }
 
+    /**
+     * The displayPH() function will display the company employees in particular order
+     */
     @FXML
     void displayPA() {
         generalTextArea.clear();
@@ -474,6 +485,9 @@ public class Controller {
 
     }
 
+    /**
+     * The displayPD() function will display the company employees in order of department sorting
+     */
     @FXML
     void displayPD() {
         generalTextArea.clear();
@@ -482,6 +496,9 @@ public class Controller {
         generalTextArea.appendText(employeeListPD);
     }
 
+    /**
+     * The displayPH() function will display the company employees in order of date sorting
+     */
     @FXML
     void displayPH() {
         generalTextArea.clear();
@@ -491,6 +508,11 @@ public class Controller {
 
     }
 
+    /**
+     * The exportToFile() function is executed upon the user clicking the "export" button on the UI. The
+     * function will manage the exportation of the entire company database into a file of the user's choice and if
+     * the database is empty it will output a corresponding message into the text area.
+     */
     @FXML
     void exportToFile() {
         generalTextArea.clear();
@@ -520,6 +542,10 @@ public class Controller {
         }
     }
 
+    /**
+     * The importFromFile() function is executed upon the user clicking "import" on the UI. The function will
+     * prompt the user to select a file for import into the project and will output a corresponding success or failure message.
+     */
     @FXML
     void importFromFile() {
         generalTextArea.clear();
@@ -546,6 +572,10 @@ public class Controller {
         generalTextArea.appendText("Successfully imported database");
     }
 
+    /**
+     * the removeFreeze() function is responsible for freezing "add" and "set" functionalities
+     * if a user clicks "remove"
+     */
     @FXML
     void removeFreeze() {
         generalTextArea.clear();
@@ -553,6 +583,11 @@ public class Controller {
         enableRemove();
     }
 
+    /**
+     * The removeSubmit() method executes when a user clicks "submit" under the "remove" button
+     * it is responsible for taking in the user selections and outputting a success or failure message
+     * depending on the inputs.
+     */
     @FXML
     void removeSubmit() {
         generalTextArea.clear();
@@ -590,6 +625,10 @@ public class Controller {
         clearEverything();
     }
 
+    /**
+     * the computePayment() function is executed when a user clicks on the "compute payment" button
+     * and outputs a success message or states that the database is empty
+     */
     @FXML
     void computePayment() {
         generalTextArea.clear();
@@ -602,7 +641,10 @@ public class Controller {
         }
     }
 
-
+    /**
+     * The setFreeze() function executes when someone clicks the "set" button
+     * to ensure that "add" and "remove" functionalities are disabled
+     */
     @FXML
     void setFreeze() {
         generalTextArea.clear();
@@ -611,6 +653,11 @@ public class Controller {
 
     }
 
+    /**
+     * The clearEverything() function is called at multiple places
+     * throughout the program to ensure that on certain clicks, that the
+     * entire form is cleared (except the text area)
+     */
     private void clearEverything(){
         partTime.setSelected(false);
         fullTime.setSelected(false);
@@ -639,9 +686,12 @@ public class Controller {
         nameSetText.clear();
         hoursSetText.clear();
 
-        //generalTextArea.clear();
     }
 
+    /**
+     * Upon a use pressing "submit" under "set" the program will try to set the hours
+     * listed by the user after finding a corresponding employee.
+     */
     @FXML
     void setSubmit() {
         generalTextArea.clear();
@@ -694,6 +744,11 @@ public class Controller {
 
     }
 
+    /**
+     * The handleImportLines function is responsible for the payroll processing
+     * type functionality upon importing a valid database .txt file.
+     * @param inputLineString represents each line of the .txt file to be processed
+     */
     private void handleImportLines(String inputLineString ){
         String [] splitInputLine = inputLineString.split(",");
         String command = splitInputLine[0];
@@ -736,7 +791,4 @@ public class Controller {
             company.add(newEmployee);
         }
     }
-
-
-
 }

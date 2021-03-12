@@ -1,4 +1,5 @@
 package sample;
+import java.text.NumberFormat;
 import java.util.Calendar;
 /**
  * Embodies the structure of a date object with a publish date stored as a
@@ -45,10 +46,11 @@ public class Date implements Comparable<Date> {
      * @param date publish date of a book
      */
     public Date(String date) {
-        String [] parsedDate = date.split("/");
+        String[] parsedDate = date.split("/");
         this.month = Integer.parseInt(parsedDate[0]);
         this.day = Integer.parseInt(parsedDate[1]);
         this.year = Integer.parseInt(parsedDate[2]);
+
     }
 
     /**

@@ -8,6 +8,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import java.io.*;
+import java.lang.reflect.InvocationTargetException;
+import java.text.NumberFormat;
 import java.util.Scanner;
 
 public class Controller {
@@ -243,6 +245,7 @@ public class Controller {
     }
     @FXML
     void addFreeze(ActionEvent event) {
+        generalTextArea.clear();
         clearEverything();
         try {
             enableAdd();
@@ -264,18 +267,43 @@ public class Controller {
         String departAdd = selectedRadioButton.getText();
         String date = dateAddText.getText();
         String name = nameAddText.getText();
-
+        if(name.length() == 0){
+            generalTextArea.appendText("The name field was left blank. Please enter a name! \n");
+            return;
+        }
+        if(!isParse(date)){
+            return;
+        }
 
         double hourly = 0.0;
         double annual = 0.0;
         int code = 0;
 
         if(employeeType.equals("Part time")){
-            hourly = Double.parseDouble(hourlyAddText.getText());
+            try{
+                hourly = Double.parseDouble(hourlyAddText.getText());
+            }catch(NumberFormatException e){
+                generalTextArea.appendText("Please enter a valid number for the hourly pay.\n");
+                hourlyAddText.clear();
+                return;
+            }
+
         }else if(employeeType.equals("Full time")){
-            annual = Double.parseDouble(annualAddText.getText());
+            try{
+                annual = Double.parseDouble(annualAddText.getText());
+            }catch(NumberFormatException e){
+                generalTextArea.appendText("Please enter a valid number for the annual pay.\n");
+                annualAddText.clear();
+                return;
+            }
         }else {
-            annual = Double.parseDouble(annualAddText.getText());
+            try{
+                annual = Double.parseDouble(annualAddText.getText());
+            }catch(NumberFormatException e){
+                generalTextArea.appendText("Please enter a valid number for the annual pay.\n");
+                annualAddText.clear();
+                return;
+            }
             selectedRadioButton = (RadioButton) codeGroup.getSelectedToggle();
             String codeString = selectedRadioButton.getText();
             if(codeString.equals("Manager(1)")){
@@ -333,7 +361,7 @@ public class Controller {
         if(number == MANAGER || number == DHEAD || number == DIRECTOR){
             isValid = true;
         }else{
-            generalTextArea.appendText("Invalid management code.");
+            generalTextArea.appendText("Invalid management code.\n");
         }
         return isValid;
     }
@@ -350,9 +378,9 @@ public class Controller {
         if(pay >= 0){
             isValid = true;
         }else if(keyCommand.equals("AP")){
-            generalTextArea.appendText("Pay rate cannot be negative.");
+            generalTextArea.appendText("Pay rate cannot be negative.\n");
         }else{
-            generalTextArea.appendText("Salary cannot be negative.");
+            generalTextArea.appendText("Salary cannot be negative.\n");
         }
         return isValid;
     }
@@ -366,12 +394,30 @@ public class Controller {
     private boolean isValidDate(String date){
         Date inputDate = new Date(date);
         boolean isValid = false;
-        if(inputDate.isValid()){
-            isValid = true;
+
+        if (inputDate.isValid()) {
+             isValid = true;
         }else{
-            generalTextArea.appendText(date + " is not a valid date!");
+            generalTextArea.appendText(date + " is not a valid date!\n");
         }
         return isValid;
+    }
+
+    private boolean isParse(String date){
+        boolean isParseble = false;
+        try{
+            String[] parsedDate = date.split("/");
+            Integer.parseInt(parsedDate[0]);
+            Integer.parseInt(parsedDate[1]);
+            Integer.parseInt(parsedDate[2]);
+            isParseble = true;
+        }catch(NumberFormatException | ArrayIndexOutOfBoundsException e){
+            generalTextArea.appendText("Please enter a valid date! Use the following format: mm/dd/yyyy. \n");
+            dateRemoveText.clear();
+            dateAddText.clear();
+            dateSetText.clear();
+        }
+        return isParseble;
     }
 
     /**
@@ -382,9 +428,9 @@ public class Controller {
     private boolean isValidHours(int hours){
         boolean isValid = false;
         if(hours < 0){
-            generalTextArea.appendText("Working hours cannot be negative.");
+            generalTextArea.appendText("Working hours cannot be negative.\n");
         }else if(hours > MAXHOURS){
-            generalTextArea.appendText("Invalid hours: over 100.");
+            generalTextArea.appendText("Invalid hours: over 100.\n");
         }else{
             isValid = true;
         }
@@ -474,7 +520,8 @@ public class Controller {
             wr.flush();
             wr.close();
         }catch (IOException e) {
-            e.printStackTrace();
+            generalTextArea.appendText("There was an error with accessing your export file. Please try with a valid file. \n");
+            return;
         }
     }
 
@@ -498,14 +545,16 @@ public class Controller {
             }
             input.close();
 
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (IOException ex) {
+            generalTextArea.appendText("There was an error with accessing your imported file. Please try with a valid file. \n");
+            return;
         }
         generalTextArea.appendText("Successfully imported database");
     }
 
     @FXML
     void removeFreeze(ActionEvent event) {
+        generalTextArea.clear();
         clearEverything();
         try {
             enableRemove();
@@ -519,11 +568,17 @@ public class Controller {
     @FXML
     void removeSubmit(ActionEvent event) {
         generalTextArea.clear();
-
         RadioButton selectedRadioButton = (RadioButton) departmentRemove.getSelectedToggle();
         String departRemove = selectedRadioButton.getText();
         String date = dateRemoveText.getText();
+        if(!isParse(date)){
+            return;
+        }
         String name = nameRemoveText.getText();
+        if(name.length() == 0){
+            generalTextArea.appendText("The name field was left blank. Please enter a name! \n");
+            return;
+        }
         int tempPay = 0;
         Profile newEmployeeProfile = profileData(name, departRemove, date);
         Employee employeeToBeRemoved = new Fulltime(newEmployeeProfile, tempPay);
@@ -553,6 +608,8 @@ public class Controller {
 
     @FXML
     void setFreeze(ActionEvent event) {
+        generalTextArea.clear();
+        clearEverything();
         try {
             enableSet();
         }
@@ -600,23 +657,41 @@ public class Controller {
         RadioButton selectedRadioButton = (RadioButton) departmentSet.getSelectedToggle();
         String departSet = selectedRadioButton.getText();
         String date = dateSetText.getText();
-        String name = nameSetText.getText();
-        int hours = Integer.parseInt(hoursSetText.getText());
-        int tempPay = 0;
-        Profile newEmployeeProfile = profileData(name, departSet, date);
-        Employee employeeHoursSet = new Parttime(newEmployeeProfile, tempPay);
-        Parttime tempEmployee = (Parttime)employeeHoursSet;
-        tempEmployee.setHours(hours);
-        boolean wasEmployeeHoursSet = company.setHours(employeeHoursSet);
-        if(wasEmployeeHoursSet){
-            generalTextArea.appendText("Working hours set.");
-        }else if (company.getNumEmployee() == 0){
-            generalTextArea.appendText("Employee database is empty.");
-        }else{
-            generalTextArea.appendText("Employee does not exist.");
+        if(!isParse(date)){
+            return;
         }
+        String name = nameSetText.getText();
+        if(name.length() == 0){
+            generalTextArea.appendText("The name field was left blank. Please enter a name! \n");
+            return;
+        }
+        int hours = 0;
+        try {
+            hours = Integer.parseInt(hoursSetText.getText());
+        }catch(NumberFormatException e){
+            generalTextArea.appendText("Please enter a valid number for the hours! \n");
+            hoursSetText.clear();
+            return;
+        }
+        int tempPay = 0;
+        if(isValidHours(hours) && isValidDate(date)){
+            Profile newEmployeeProfile = profileData(name, departSet, date);
+            Employee employeeHoursSet = new Parttime(newEmployeeProfile, tempPay);
+            Parttime tempEmployee = (Parttime)employeeHoursSet;
+            tempEmployee.setHours(hours);
+            boolean wasEmployeeHoursSet = company.setHours(employeeHoursSet);
+            if(wasEmployeeHoursSet){
+                generalTextArea.appendText("Working hours set.");
+            }else if (company.getNumEmployee() == 0){
+                generalTextArea.appendText("Employee database is empty.");
+            }else{
+                generalTextArea.appendText("Employee does not exist.");
+            }
 
+
+        }
         clearEverything();
+
     }
 
     private void handleImportLines(String inputLineString ){

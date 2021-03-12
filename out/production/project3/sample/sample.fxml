@@ -156,11 +156,13 @@
                                     <Insets left="3.0" />
                                  </VBox.margin>
                               </Text>
-                              <TextField fx:id="codeAddText">
-                                 <VBox.margin>
-                                    <Insets left="15.0" right="15.0" top="10.0" />
-                                 </VBox.margin>
-                              </TextField>
+                              <RadioButton fx:id="managerRadio" mnemonicParsing="false" text="Manager(1)">
+                                 <toggleGroup>
+                                    <ToggleGroup fx:id="codeGroup" />
+                                 </toggleGroup>
+                              </RadioButton>
+                              <RadioButton fx:id="dHeadRadio" mnemonicParsing="false" text="Dep. Head(2)" toggleGroup="$codeGroup" />
+                              <RadioButton fx:id="directorRadio" mnemonicParsing="false" text="Director(3)" toggleGroup="$codeGroup" />
                            </children>
                         </VBox>
                      </children>

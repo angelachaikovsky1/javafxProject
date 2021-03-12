@@ -283,4 +283,20 @@ public class Company {
             return employeeTwo;
         }
     }
+
+    /**
+     * Returns a list of the employees in the database. If the database is empty, returns a statement acknowledging that.
+     * @return a String containing a list of all the employees in the database or a statement acknowledging that it is
+     * empty
+     */
+    public String exportDataBase() {
+        String printString = "";
+        if(numEmployee == 0){
+            printString = "Employee database is empty.";
+            return printString;
+        }
+        printString = "--List of Employees--\n";
+        printString = printEmployees(printString);
+        return printString;
+    }
 }

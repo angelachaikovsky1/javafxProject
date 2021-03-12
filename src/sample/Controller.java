@@ -4,15 +4,19 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 
 import javafx.event.ActionEvent;
-import javafx.scene.layout.HBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-import java.io.File;
+import java.io.*;
+import java.util.Scanner;
 
 public class Controller {
     private Company company = new Company();
 
+    final static int ADDMANAGECOMMANDS = 6;
+    final static int ADDPARTFULLCOMMANDS = 5;
+    final static int OTHEREXPECTEDCOMMANDS = 4;
+    final static int SINGLECOMMAND = 1;
     final static int MANAGER = 1;
     final static int DHEAD = 2;
     final static int DIRECTOR = 3;
@@ -60,7 +64,19 @@ public class Controller {
     private TextField annualAddText;
 
     @FXML
-    private TextField codeAddText;
+    private RadioButton managerRadio;
+
+    @FXML
+    private ToggleGroup codeGroup;
+
+    @FXML
+    private RadioButton dHeadRadio;
+
+    @FXML
+    private RadioButton directorRadio;
+
+    //@FXML
+    //private TextField codeAddText;
 
     @FXML
     private Button removeButton;
@@ -159,7 +175,10 @@ public class Controller {
         nameSetText.setDisable(true);
         hourlyAddText.setDisable(false);
         annualAddText.setDisable(false);
-        codeAddText.setDisable(false);
+        managerRadio.setDisable(false);
+        dHeadRadio.setDisable(false);
+        directorRadio.setDisable(false);
+        //codeAddText.setDisable(false);
         hoursSetText.setDisable(true);
     }
     private void enableRemove(){
@@ -186,7 +205,10 @@ public class Controller {
         nameSetText.setDisable(true);
         hourlyAddText.setDisable(true);
         annualAddText.setDisable(true);
-        codeAddText.setDisable(true);
+        managerRadio.setDisable(true);
+        dHeadRadio.setDisable(true);
+        directorRadio.setDisable(true);
+        //codeAddText.setDisable(true);
         hoursSetText.setDisable(true);
     }
     private void enableSet(){
@@ -213,11 +235,15 @@ public class Controller {
         nameSetText.setDisable(false);
         hourlyAddText.setDisable(true);
         annualAddText.setDisable(true);
-        codeAddText.setDisable(true);
+        managerRadio.setDisable(true);
+        dHeadRadio.setDisable(true);
+        directorRadio.setDisable(true);
+        //codeAddText.setDisable(true);
         hoursSetText.setDisable(false);
     }
     @FXML
     void addFreeze(ActionEvent event) {
+        clearEverything();
         try {
             enableAdd();
         }
@@ -239,6 +265,7 @@ public class Controller {
         String date = dateAddText.getText();
         String name = nameAddText.getText();
 
+
         double hourly = 0.0;
         double annual = 0.0;
         int code = 0;
@@ -247,13 +274,18 @@ public class Controller {
             hourly = Double.parseDouble(hourlyAddText.getText());
         }else if(employeeType.equals("Full time")){
             annual = Double.parseDouble(annualAddText.getText());
-        }else if(employeeType.equals("Management")){
+        }else {
             annual = Double.parseDouble(annualAddText.getText());
-            code = Integer.parseInt(codeAddText.getText());
-        }else{
-            //fuck ?
+            selectedRadioButton = (RadioButton) codeGroup.getSelectedToggle();
+            String codeString = selectedRadioButton.getText();
+            if(codeString.equals("Manager(1)")){
+                code = 1;
+            }else if(codeString.equals("Dep. Head(2)")){
+                code = 2;
+            }else{
+                code = 3;
+            }
         }
-        
 
         if(employeeType.equals("Part time")){
             if(isValidPay(hourly, "AP") && isValidDate(date)){
@@ -289,18 +321,7 @@ public class Controller {
                 }
             }
         }
-        partTime.setSelected(false);
-        fullTime.setSelected(false);
-        management.setSelected(false);
-        addIT.setSelected(false);
-        addCS.setSelected(false);
-        addECE.setSelected(false);
-        dateAddText.clear();
-        nameAddText.clear();
-        hourlyAddText.clear();
-        annualAddText.clear();
-        codeAddText.clear();
-
+        clearEverything();
     }
     /**
      * The isValidRole method verifies that the management code is a valid number
@@ -386,27 +407,34 @@ public class Controller {
     @FXML
     void disableAnnualCode(ActionEvent event) {
         annualAddText.setDisable(true);
-        codeAddText.setDisable(true);
+        managerRadio.setDisable(true);
+        dHeadRadio.setDisable(true);
+        directorRadio.setDisable(true);
         hourlyAddText.setDisable(false);
     }
 
     @FXML
     void disableHourly(ActionEvent event) {
         annualAddText.setDisable(false);
-        codeAddText.setDisable(false);
+        managerRadio.setDisable(false);
+        dHeadRadio.setDisable(false);
+        directorRadio.setDisable(false);
         hourlyAddText.setDisable(true);
     }
 
     @FXML
     void disableHourlyCode(ActionEvent event) {
         annualAddText.setDisable(false);
-        codeAddText.setDisable(true);
+        managerRadio.setDisable(true);
+        dHeadRadio.setDisable(true);
+        directorRadio.setDisable(true);
         hourlyAddText.setDisable(true);
     }
 
     @FXML
     void displayPA(ActionEvent event) {
         generalTextArea.clear();
+        clearEverything();
         String employeeListPA = company.print();
         generalTextArea.appendText(employeeListPA);
 
@@ -415,6 +443,7 @@ public class Controller {
     @FXML
     void displayPD(ActionEvent event) {
         generalTextArea.clear();
+        clearEverything();
         String employeeListPD = company.printByDepartment();
         generalTextArea.appendText(employeeListPD);
     }
@@ -422,6 +451,7 @@ public class Controller {
     @FXML
     void displayPH(ActionEvent event) {
         generalTextArea.clear();
+        clearEverything();
         String employeeListPH = company.printByDate();
         generalTextArea.appendText(employeeListPH);
 
@@ -429,17 +459,29 @@ public class Controller {
 
     @FXML
     void exportToFile(ActionEvent event) {
+        generalTextArea.clear();
+        clearEverything();
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Open Target File for the Export");
         chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"),
                 new FileChooser.ExtensionFilter("All Files", "*.*"));
         Stage stage = new Stage();
-        File targeFile = chooser.showSaveDialog(stage); //get the reference of the target file
-        //write code to write to the file.
+        File targetFile = chooser.showSaveDialog(stage); //get the reference of the target file
+
+        try{
+            Writer wr = new FileWriter(targetFile);
+            wr.write(company.exportDataBase());
+            wr.flush();
+            wr.close();
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
     void importFromFile(ActionEvent event) {
+        generalTextArea.clear();
+        clearEverything();
         FileChooser chooser = new FileChooser();
         chooser.setTitle("Open Source File for the Import");
         chooser.getExtensionFilters().addAll(new FileChooser.ExtensionFilter("Text Files", "*.txt"),
@@ -447,10 +489,24 @@ public class Controller {
         Stage stage = new Stage();
         File sourceFile = chooser.showOpenDialog(stage); //get the reference of the source file
         //write code to read from the file.
+        try {
+            Scanner input = new Scanner(sourceFile);
+
+            while (input.hasNextLine()) {
+                String line = input.nextLine();
+                handleImportLines(line);
+            }
+            input.close();
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        generalTextArea.appendText("Successfully imported database");
     }
 
     @FXML
     void removeFreeze(ActionEvent event) {
+        clearEverything();
         try {
             enableRemove();
         }
@@ -479,10 +535,13 @@ public class Controller {
         }else{
             generalTextArea.appendText("Employee does not exist.");
         }
+        clearEverything();
     }
 
     @FXML
     void computePayment(ActionEvent event) {
+        generalTextArea.clear();
+        clearEverything();
         if(company.getNumEmployee()==0){
             generalTextArea.appendText("Employee database is empty.");
         }else {
@@ -503,10 +562,40 @@ public class Controller {
         }
     }
 
+    private void clearEverything(){
+        partTime.setSelected(false);
+        fullTime.setSelected(false);
+        management.setSelected(false);
+        addIT.setSelected(false);
+        addCS.setSelected(false);
+        addECE.setSelected(false);
+        dateAddText.clear();
+        nameAddText.clear();
+        hourlyAddText.clear();
+        annualAddText.clear();
+        managerRadio.setSelected(false);
+        dHeadRadio.setSelected(false);
+        directorRadio.setSelected(false);
+
+        removeCS.setSelected(false);
+        removeECE.setSelected(false);
+        removeIT.setSelected(false);
+        dateRemoveText.clear();
+        nameRemoveText.clear();
+
+        setCS.setSelected(false);
+        setECE.setSelected(false);
+        setIT.setSelected(false);
+        dateSetText.clear();
+        nameSetText.clear();
+        hoursSetText.clear();
+
+        //generalTextArea.clear();
+    }
+
     @FXML
     void setSubmit(ActionEvent event) {
         generalTextArea.clear();
-
 
         RadioButton selectedRadioButton = (RadioButton) departmentSet.getSelectedToggle();
         String departSet = selectedRadioButton.getText();
@@ -527,7 +616,52 @@ public class Controller {
             generalTextArea.appendText("Employee does not exist.");
         }
 
-
+        clearEverything();
     }
+
+    private void handleImportLines(String inputLineString ){
+        String [] splitInputLine = inputLineString.split(",");
+        String command = splitInputLine[0];
+        String name = "";
+        String date = "";
+        String department = "";
+
+        double pay = 0;
+        int role = 0;
+
+        if(splitInputLine.length == ADDPARTFULLCOMMANDS){
+            name = splitInputLine[1];
+            department = splitInputLine[2];
+            date = splitInputLine[3];
+            pay = Double.parseDouble(splitInputLine[4]);
+
+        }else if(splitInputLine.length == ADDMANAGECOMMANDS){
+            name = splitInputLine[1];
+            department = splitInputLine[2];
+            date = splitInputLine[3];
+            pay = Double.parseDouble(splitInputLine[4]);
+            role = Integer.parseInt(splitInputLine[5]);
+        }else if(splitInputLine.length == OTHEREXPECTEDCOMMANDS){
+            name = splitInputLine[1];
+            department = splitInputLine[2];
+            date = splitInputLine[3];
+        }
+
+        if(command.equals("P")){
+            Profile newEmployeeProfile = profileData(name, department, date);
+            Employee newEmployee = new Parttime(newEmployeeProfile, pay);
+            company.add(newEmployee);
+        }else if(command.equals("F")){
+            Profile newEmployeeProfile = profileData(name, department, date);
+            Employee newEmployee = new Fulltime(newEmployeeProfile, pay);
+            company.add(newEmployee);
+        }else if(command.equals("M")){
+            Profile newEmployeeProfile = profileData(name, department, date);
+            Employee newEmployee = new Management(newEmployeeProfile, pay, role);
+            company.add(newEmployee);
+        }
+    }
+
+
 
 }

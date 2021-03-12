@@ -10,9 +10,7 @@ import java.text.DecimalFormat;
  */
 public class Employee {
     private Profile profile;
-    private String pay;
     private String payDue;
-
 
     final static int STARTPAY = 0;
 
@@ -20,11 +18,10 @@ public class Employee {
      * Initializes the global variables for the profile of the employee, the type of the employee, the pay of the
      * employee, the pay that is due for the employee, and also whether the employee is part of management or not
      * @param profile the profile object of the employee which includes the name, department, and the date hired
-     * @param pay the yearly pay of fulltime employees or the hourly pay of parttime employees
      */
-    public Employee(Profile profile, double pay){
+    public Employee(Profile profile){
         this.profile = profile;
-        this.pay = payFormat(pay);
+        //this.pay = payFormat(pay);
         this.payDue = payFormat(STARTPAY);
 
     }
@@ -57,13 +54,6 @@ public class Employee {
         return payDue;
     }
 
-    /**
-     * Gets the pay of the employee
-     * @return the pay of the employee
-     */
-    public String getPay(){
-        return pay;
-    }
 
     /**
      * Sets the payment that is due

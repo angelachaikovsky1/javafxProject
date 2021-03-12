@@ -9,6 +9,7 @@ package sample;
  */
 public class Fulltime extends Employee{
     final static int PAYPERIOD = 26;
+    private String annualPay;
 
     /**
      * Initializes the global variables for the profile of the employee, the type of the employee, the pay of the
@@ -19,7 +20,8 @@ public class Fulltime extends Employee{
 
      */
     public Fulltime(Profile profile, double pay){
-        super(profile, pay);
+        super(profile);
+        annualPay = super.payFormat(pay);
     }
 
     /**
@@ -28,12 +30,20 @@ public class Fulltime extends Employee{
      */
     @Override
     public void calculatePayment() {
-        String pay = super.getPay();
+        String pay = annualPay;
         pay = super.puncRemoved(pay);
         double doublePay = Double.parseDouble(pay);
         double payDue = doublePay / PAYPERIOD;
         String payDueString = super.payFormat(payDue);
         super.setPayDue(payDueString);
+    }
+
+    /**
+     * Gets the pay of the employee
+     * @return the pay of the employee
+     */
+    public String getPay(){
+        return annualPay;
     }
 
     /**
@@ -44,7 +54,7 @@ public class Fulltime extends Employee{
      */
     @Override
     public String toString(){
-        String pay = super.getPay();
+        String pay = annualPay;
         String printString = super.toString();
         printString = printString + "::FULL TIME::Annual Salary $";
         printString = printString + pay;

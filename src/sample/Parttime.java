@@ -8,6 +8,7 @@ package sample;
  */
 public class Parttime extends Employee{
     private int hours;
+    private String hourlyPay;
     final static int MAXHOURS = 80;
     final static double OVERTIME = 1.5;
 
@@ -17,7 +18,8 @@ public class Parttime extends Employee{
      * @param pay the hourly pay
      */
     public Parttime(Profile profile, double pay){
-        super(profile,  pay);
+        super(profile);
+        hourlyPay = super.payFormat(pay);
     }
 
     /**
@@ -25,7 +27,7 @@ public class Parttime extends Employee{
      */
     @Override
     public void calculatePayment() {
-        String pay = super.getPay();
+        String pay = hourlyPay;
         pay = super.puncRemoved(pay);
         double doublePay = Double.parseDouble(pay);
         double additionalPay = 0;
@@ -49,7 +51,7 @@ public class Parttime extends Employee{
      */
     @Override
     public String toString(){
-        String pay = super.getPay();
+        String pay = hourlyPay;
         String printString = super.toString();
         printString = printString + "::PART TIME::Hourly Rate $";
         printString = printString + pay;
